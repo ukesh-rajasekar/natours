@@ -1,11 +1,12 @@
 const express = require('express');
 const fs = require('fs');
+const morgan = require('morgan')
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 const app = express();
 
 
-//middlewares 
+//MIDDLEWARES 
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -19,12 +20,9 @@ const PORT = 3000;
 
 
 
-app.listen(PORT, () => {
 
-    console.log(`server is listening at ${PORT}`)
 
-})
-
+//ROUTE HANDLERS
 const getAllTours = (req, res) => {
     res.status(200).json({ status: 'success', requestedAt: req.requestedTime, results: tours.length, data: { tours } })
 }
@@ -85,9 +83,18 @@ const createTour = (req, res) => {
     })
 }
 
-
+//ROUTES
 app.get('/api/v1/tours', getAllTours)
 app.get('/api/v1/tours/:id', getTour)
 app.patch('/api/v1/tours/:id', updateTour)
 app.delete('/api/v1/tours/:id', deleteTour)
 app.post('/api/v1/tours', createTour)
+
+
+
+//START SERVER
+app.listen(PORT, () => {
+
+    console.log(`server is listening at ${PORT}`)
+
+})
